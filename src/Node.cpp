@@ -4,19 +4,23 @@
 #include <Adafruit_BMP280.h>
 #include <BH1750.h>
 
-// put function declarations here:
-int myFunction(int, int);
+Adafruit_BMP280 bmp;
 
-void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+void setup()
+{
+  Serial.begin(9600);
+  if (!bmp.begin(0x76))
+  {
+    Serial.println("Khong tim thay cam bien BMP280!");
+    while (1);
+  }
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-}
+void loop()
+{
+  Serial.println(bmp.readTemperature()); //đo nhiệt độ
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+  Serial.println(bmp.readPressure()); //đo áp suất
+  
+  delay(2000);
 }
