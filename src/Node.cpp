@@ -6,18 +6,14 @@
 #include <Wire.h> //thư viện i2c vì bh1750 truyền theo giao thức này
 
 #define DHTTYPE DHT22 // khai báo loại cảm biến là DHT22
-#define DHTPIN 4 // Chân Data của DHT22 nối với GPIO 4
+#define DHTPIN 23 // Chân Data của DHT22 nối với GPIO 4
 DHT dht(DHTPIN, DHTTYPE); //khởi tạo object dht gòm có DHTPIN VÀ DHTTYPE
 BH1750 lightMeter; //khởi tạo cảm biến ánh sáng lightMeter
 //----cấu hình LoRa UART (serial2)
 #define RXD2 16
 #define TXD2 17
 #define LoRa_baudrate 9600
-// put function declarations here:
-int myFunction(int, int);
-
 void setup() {
-  // put your setup code here, to run once:
   Serial.begin(115200);
   //Serial2.begin(baudrate, config, RX_pin, TX_pin);
   //baudrate: tốc độ truyền dữ liệu giữa esp32 và lora
@@ -29,7 +25,6 @@ void setup() {
   Wire.begin(); //Khoi dong I2C
   dht.begin(); //DHT22
   lightMeter.begin(BH1750::CONTINUOUS_HIGH_RES_MODE); // Khoi dong DH1750 o che do do lien tuc (continuous) va do chinh xac cao (high_res)
-
 
 }
 //Temp,pressure,humid,lux,rain
