@@ -47,7 +47,7 @@ void loop() {
   else
   {
     //
-    String payload = String(temp, 1) + ", " + String(humid, 1) + ", " +  String(lux);
+    String payload = String(temp, 1) + "," + String(pressure, 1) + "," + String(humid, 1) + "," +  String(lux) + "," + String(rain);
     Serial.print("Dang gui goi tin: ");
     Serial.println(payload);
     Serial2.println(payload); //gửi qua lora
