@@ -11,11 +11,11 @@
 DHT dht(DHTPIN, DHTTYPE); //khởi tạo object dht gòm có DHTPIN VÀ DHTTYPE
 BH1750 lightMeter; //khởi tạo cảm biến ánh sáng lightMeter
 Adafruit_BMP280 bmp;
-const int RainSensorPin = A0; //analog doc gia tri do uot cua RainSensor
+const int RainSensorPin = 34; //analog doc gia tri do uot cua RainSensor
 //----cấu hình LoRa UART (serial2)
 #define RXD2 16
 #define TXD2 17
-#define LoRa_baudrate 9600
+#define LoRa_baudrate 115200
 #define threshhold 102 //nho hon gia tri nay se co mua (0-1023)
 void setup() {
   Serial.begin(115200);
@@ -25,6 +25,7 @@ void setup() {
   //RX_pin: esp32 nhận dữ liệu từ lora
   //TX-pin: esp32 gửi dữ liệu sang lora
   pinMode(RainSensorPin, INPUT);
+  Wire.begin(); //Khoi dong I2C
   if (!bmp.begin(0x76))
   {
     Serial.println("Khong tim thay cam bien BMP280!");
@@ -32,9 +33,8 @@ void setup() {
   }
   Serial2.begin(LoRa_baudrate,  SERIAL_8N1, RXD2, TXD2);
   Serial.println("\n--- Khoi dong Tram Phat---");
-  Wire.begin(); //Khoi dong I2C
   dht.begin(); //DHT22
-  bmp.begin(); //BMP280
+  //bmp.begin(); //BMP280
   lightMeter.begin(BH1750::CONTINUOUS_HIGH_RES_MODE); // Khoi dong DH1750 o che do do lien tuc (continuous) va do chinh xac cao (high_res)
 }
 //Temp,pressure,humid,lux,rain
@@ -43,7 +43,7 @@ void setup() {
 void loop() {
   //float temp = bmp.readTemperature();
   float temp = dht.readTemperature(); // do nhiet do
-  float pressure = bmp.readPressure(); // do ap suat
+  float pressure = bmp.readPressure() / 100.0; // do ap suat
   float humid = dht.readHumidity(); // đo độ ẩm không khí
   uint16_t lux = lightMeter.readLightLevel();//vì ánh sáng ko âm nên uint16_t là số nguyên ko âm 16 bit
   int rain = analogRead(RainSensorPin);
