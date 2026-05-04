@@ -1,0 +1,321 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0D1117;--surface:#161B22;--surface2:#1F2937;--border:#30363D;
+    --text:#E6EDF3;--muted:#7D8590;--accent:#58A6FF;--green:#3FB950;
+    --amber:#D29922;--red:#F85149;--teal:#39D353;--purple:#BC8CFF;
+    --rain:#6E9EF5;--sun:#FFD60A;
+  }
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;min-height:100vh;padding:0}
+  .mono{font-family:'Space Mono',monospace}
+
+  header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
+  .logo{display:flex;align-items:center;gap:10px}
+  .logo-dot{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .logo-text{font-family:'Space Mono',monospace;font-size:13px;color:var(--text);letter-spacing:2px;text-transform:uppercase}
+  .status-badge{display:flex;align-items:center;gap:6px;background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.3);border-radius:20px;padding:4px 12px;font-size:11px;color:var(--green)}
+
+  .main{padding:20px 24px;max-width:1200px;margin:0 auto}
+
+  .top-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+  .metric-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;position:relative;overflow:hidden;cursor:default;transition:border-color .2s}
+  .metric-card:hover{border-color:#58A6FF55}
+  .metric-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+  .metric-card.temp::before{background:linear-gradient(90deg,#FF6B6B,#FFD93D)}
+  .metric-card.humi::before{background:linear-gradient(90deg,#4ECDC4,#44A0A8)}
+  .metric-card.pres::before{background:linear-gradient(90deg,#BC8CFF,#7C3AED)}
+  .mc-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px}
+  .mc-value{font-family:'Space Mono',monospace;font-size:36px;font-weight:700;line-height:1;margin-bottom:4px}
+  .mc-value.temp{color:#FF8C69}
+  .mc-value.humi{color:#4ECDC4}
+  .mc-value.pres{color:#BC8CFF}
+  .mc-unit{font-size:14px;color:var(--muted);margin-left:4px;font-family:'DM Sans',sans-serif;font-weight:400}
+  .mc-delta{font-size:11px;margin-top:6px;display:flex;align-items:center;gap:4px}
+  .delta-up{color:var(--red)}
+  .delta-down{color:var(--green)}
+  .mc-icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:38px;opacity:.12}
+
+  .mid-row{display:grid;grid-template-columns:1fr 320px;gap:14px;margin-bottom:18px}
+  .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px}
+  .card-title{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  .card-title-dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+
+  .forecast-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px}
+  .forecast-main{text-align:center;padding:12px 0 16px}
+  .weather-icon{font-size:52px;margin-bottom:8px;display:block}
+  .weather-label{font-size:20px;font-weight:600;color:var(--text);margin-bottom:4px}
+  .weather-sub{font-size:12px;color:var(--muted)}
+  .forecast-confidence{display:flex;align-items:center;justify-content:center;gap:8px;margin:10px 0 14px}
+  .conf-bar{flex:1;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
+  .conf-fill{height:100%;border-radius:3px;transition:width 1s ease}
+  .conf-label{font-family:'Space Mono',monospace;font-size:11px;color:var(--green);min-width:36px;text-align:right}
+  .forecast-hours{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;border-top:1px solid var(--border);padding-top:14px;margin-top:4px}
+  .fh{text-align:center;padding:8px 4px;border-radius:8px;background:var(--surface2)}
+  .fh-time{font-size:10px;color:var(--muted);margin-bottom:4px}
+  .fh-icon{font-size:18px;margin-bottom:2px}
+  .fh-temp{font-family:'Space Mono',monospace;font-size:11px;color:var(--text)}
+
+  .bottom-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+  .gauge-row{display:flex;gap:16px;justify-content:center;padding:8px 0}
+
+  .device-table{width:100%}
+  .device-table tr{border-bottom:1px solid var(--border)}
+  .device-table tr:last-child{border-bottom:none}
+  .device-table td{padding:9px 6px;font-size:12px}
+  .device-table td:first-child{color:var(--muted)}
+  .device-table td:last-child{font-family:'Space Mono',monospace;color:var(--text);text-align:right}
+  .signal-bar{display:flex;gap:2px;align-items:flex-end}
+  .sb{width:4px;border-radius:1px;background:var(--surface2)}
+  .sb.active{background:var(--green)}
+
+  .alert-strip{background:rgba(210,153,34,.08);border:1px solid rgba(210,153,34,.3);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:18px;font-size:12px;color:#E6B800}
+  .alert-dot{width:8px;height:8px;border-radius:50%;background:#D29922;flex-shrink:0;animation:pulse 1.5s infinite}
+
+  .refresh-bar{display:flex;align-items:center;justify-content:space-between;padding:0 0 16px;border-bottom:1px solid var(--border);margin-bottom:18px}
+  .rb-time{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted)}
+  .rb-btn{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:5px 12px;color:var(--accent);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s}
+  .rb-btn:hover{background:rgba(88,166,255,.1)}
+
+  canvas{display:block}
+  .node-status{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+  .node-pill{display:flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 10px;font-size:11px}
+  .np-dot{width:6px;height:6px;border-radius:50%}
+</style>
+
+<header>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    <span class="logo-text">ESP32 · LoRa · Weather</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="font-size:11px;color:var(--muted)" class="mono" id="hdrTime">--:--:--</span>
+    <div class="status-badge">
+      <span>&#9679;</span> LIVE
+    </div>
+  </div>
+</header>
+
+<div class="main">
+  <div class="refresh-bar">
+    <span class="rb-time mono" id="lastUpdate">Cập nhật lần cuối: --</span>
+    <button class="rb-btn" onclick="fetchLatest()">&#8635; Làm mới dữ liệu</button>
+  </div>
+
+  <div id="alertStrip" class="alert-strip" style="display:none">
+    <div class="alert-dot"></div>
+    <span id="alertText">Cảnh báo: Áp suất giảm mạnh — khả năng mưa cao trong 2 giờ tới</span>
+  </div>
+
+  <div class="top-row">
+    <div class="metric-card temp">
+      <div class="mc-label">Nhiệt độ</div>
+      <div><span class="mc-value temp" id="valTemp">28.4</span><span class="mc-unit">°C</span></div>
+      <div class="mc-delta" id="deltaTemp"><span class="delta-up">▲ 0.3°C</span> so với 10 phút trước</div>
+      <div class="mc-icon">🌡</div>
+    </div>
+    <div class="metric-card humi">
+      <div class="mc-label">Độ ẩm</div>
+      <div><span class="mc-value humi" id="valHumi">72</span><span class="mc-unit">%</span></div>
+      <div class="mc-delta" id="deltaHumi"><span class="delta-up">▲ 4%</span> so với 10 phút trước</div>
+      <div class="mc-icon">💧</div>
+    </div>
+    <div class="metric-card pres">
+      <div class="mc-label">Áp suất</div>
+      <div><span class="mc-value pres" id="valPres">1008</span><span class="mc-unit">hPa</span></div>
+      <div class="mc-delta" id="deltaPres"><span class="delta-down">▼ 3 hPa</span> so với 10 phút trước</div>
+      <div class="mc-icon">🔵</div>
+    </div>
+  </div>
+
+  <div class="mid-row">
+    <div class="chart-card">
+      <div class="card-title"><span class="card-title-dot"></span>Dữ liệu 6 giờ gần nhất</div>
+      <div style="position:relative;height:200px;margin-bottom:8px">
+        <canvas id="lineChart" role="img" aria-label="Biểu đồ nhiệt độ, độ ẩm, áp suất theo thời gian">Biểu đồ đường thể hiện biến thiên của 3 chỉ số khí tượng.</canvas>
+      </div>
+      <div style="display:flex;gap:16px;font-size:11px;color:var(--muted)">
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:2px;background:#FF8C69;display:inline-block"></span>Nhiệt độ (°C)</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:2px;background:#4ECDC4;display:inline-block"></span>Độ ẩm (%)</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:2px;background:#BC8CFF;border-top:2px dashed #BC8CFF;display:inline-block"></span>Áp suất (÷10 hPa)</span>
+      </div>
+    </div>
+
+    <div class="forecast-card">
+      <div class="card-title"><span class="card-title-dot" style="background:#FFD60A"></span>Dự báo thời tiết</div>
+      <div class="forecast-main">
+        <span class="weather-icon" id="fcastIcon">⛅</span>
+        <div class="weather-label" id="fcastLabel">Nhiều mây</div>
+        <div class="weather-sub" id="fcastSub">Khả năng có mưa nhỏ</div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px;display:flex;justify-content:space-between">
+        <span>Độ tin cậy</span>
+        <span class="conf-label" id="confText">74%</span>
+      </div>
+      <div class="conf-bar"><div class="conf-fill" id="confFill" style="width:74%;background:var(--green)"></div></div>
+      <div style="margin-top:12px;font-size:11px;color:var(--muted)">Xu hướng áp suất</div>
+      <div id="pressTrend" style="font-size:12px;color:#F85149;margin-top:2px">▼ Giảm — dấu hiệu thời tiết xấu</div>
+      <div class="forecast-hours" id="hourForecast">
+        <div class="fh"><div class="fh-time">+2h</div><div class="fh-icon">🌧</div><div class="fh-temp">27°C</div></div>
+        <div class="fh"><div class="fh-time">+4h</div><div class="fh-icon">🌦</div><div class="fh-temp">26°C</div></div>
+        <div class="fh"><div class="fh-time">+6h</div><div class="fh-icon">⛅</div><div class="fh-temp">27°C</div></div>
+        <div class="fh"><div class="fh-time">+8h</div><div class="fh-icon">🌤</div><div class="fh-temp">28°C</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-row">
+    <div class="chart-card">
+      <div class="card-title"><span class="card-title-dot" style="background:#D29922"></span>Phân tích áp suất 24h</div>
+      <div style="position:relative;height:160px">
+        <canvas id="barChart" role="img" aria-label="Biểu đồ cột áp suất theo từng khoảng thời gian trong ngày">Biểu đồ áp suất 24 giờ.</canvas>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="card-title"><span class="card-title-dot" style="background:#3FB950"></span>Thông tin thiết bị LoRa</div>
+      <table class="device-table">
+        <tr><td>Node ID</td><td>ESP32-NODE-01</td></tr>
+        <tr><td>Tần số</td><td>915 MHz</td></tr>
+        <tr><td>RSSI</td><td id="rssiVal">-68 dBm</td></tr>
+        <tr><td>SNR</td><td id="snrVal">8.5 dB</td></tr>
+        <tr><td>Gói tin / phút</td><td>6</td></tr>
+        <tr><td>Cường độ tín hiệu</td><td>
+          <div class="signal-bar">
+            <div class="sb active" style="height:6px"></div>
+            <div class="sb active" style="height:9px"></div>
+            <div class="sb active" style="height:12px"></div>
+            <div class="sb active" style="height:15px"></div>
+            <div class="sb" style="height:18px"></div>
+          </div>
+        </td></tr>
+      </table>
+      <div class="node-status" style="margin-top:12px">
+        <div class="node-pill"><div class="np-dot" style="background:var(--green)"></div>Node-01 Online</div>
+        <div class="node-pill"><div class="np-dot" style="background:var(--green)"></div>Node-02 Online</div>
+        <div class="node-pill"><div class="np-dot" style="background:var(--amber)"></div>Node-03 Yếu</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="card-title"><span class="card-title-dot" style="background:#6E9EF5"></span>Chỉ số Heat Index & Điểm sương</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:6px">Heat Index (Cảm nhận)</div>
+        <div style="font-family:'Space Mono',monospace;font-size:28px;color:#FF8C69" id="heatIdx">31.2°C</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px" id="heatLevel">Cảm giác: <span style="color:#FFD60A">Ấm, cẩn thận</span></div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:6px">Điểm sương</div>
+        <div style="font-family:'Space Mono',monospace;font-size:28px;color:#4ECDC4" id="dewPoint">22.8°C</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">Độ ẩm tuyệt đối: <span style="color:#4ECDC4" id="absHumi">19.2 g/m³</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const labels6h = ['06:00','06:30','07:00','07:30','08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30'];
+let tempData = [27.1,27.4,27.8,28.0,28.2,28.4,28.5,28.3,28.6,28.8,28.4,28.4];
+let humiData = [68,69,70,71,72,72,73,73,72,71,72,72];
+let presData = [101.4,101.3,101.2,101.1,101.0,100.9,100.8,100.8,100.7,100.6,100.8,100.8];
+
+const lineChart = new Chart(document.getElementById('lineChart'),{
+  type:'line',
+  data:{
+    labels:labels6h,
+    datasets:[
+      {label:'Nhiệt độ',data:tempData,borderColor:'#FF8C69',backgroundColor:'rgba(255,140,105,.08)',fill:true,tension:.4,pointRadius:2,borderWidth:2},
+      {label:'Độ ẩm',data:humiData,borderColor:'#4ECDC4',backgroundColor:'rgba(78,205,196,.06)',fill:true,tension:.4,pointRadius:2,borderWidth:2},
+      {label:'Áp suất /10',data:presData,borderColor:'#BC8CFF',borderDash:[4,3],fill:false,tension:.4,pointRadius:2,borderWidth:2}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(22,27,34,.95)',borderColor:'#30363D',borderWidth:1,titleFont:{family:'Space Mono',size:10},bodyFont:{family:'DM Sans',size:11}}},
+    scales:{
+      x:{grid:{color:'rgba(48,54,61,.6)'},ticks:{color:'#7D8590',font:{size:9},maxTicksLimit:6}},
+      y:{grid:{color:'rgba(48,54,61,.6)'},ticks:{color:'#7D8590',font:{size:9}}}
+    }
+  }
+});
+
+const presHours = ['00h','03h','06h','09h','12h','15h','18h','21h'];
+const presVals = [1012,1011,1010,1009,1008,1007,1006,1008];
+const barChart = new Chart(document.getElementById('barChart'),{
+  type:'bar',
+  data:{
+    labels:presHours,
+    datasets:[{label:'Áp suất (hPa)',data:presVals,backgroundColor:presVals.map(v=>v<1008?'rgba(248,81,73,.6)':'rgba(88,166,255,.5)'),borderColor:presVals.map(v=>v<1008?'#F85149':'#58A6FF'),borderWidth:1,borderRadius:4}]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(22,27,34,.95)',borderColor:'#30363D',borderWidth:1}},
+    scales:{
+      x:{grid:{color:'rgba(48,54,61,.4)'},ticks:{color:'#7D8590',font:{size:9}}},
+      y:{grid:{color:'rgba(48,54,61,.4)'},ticks:{color:'#7D8590',font:{size:9}},min:1004,max:1014}
+    }
+  }
+});
+    async function fetchLatest() {
+        const res = await fetch('/api/latest');
+        const d = await res.json();
+
+        // cards
+        document.getElementById('valTemp').textContent = d.temp.toFixed(1);
+        document.getElementById('valHumi').textContent = Math.round(d.humidity);
+        document.getElementById('valPres').textContent = Math.round(d.pressure);
+
+        // heat index & dew point từ server
+        document.getElementById('heatIdx').textContent = d.heat_index + '°C';
+        document.getElementById('dewPoint').textContent = d.dew_point + '°C';
+
+        // forecast từ server
+        document.getElementById('fcastIcon').textContent = d.forecast.icon;
+        document.getElementById('fcastLabel').textContent = d.forecast.condition;
+        document.getElementById('fcastSub').textContent = d.forecast.description;
+        document.getElementById('confText').textContent = d.forecast.confidence + '%';
+        document.getElementById('confFill').style.width = d.forecast.confidence + '%';
+
+        // áp suất trend
+        const trend = d.press_trend;
+        const trendText = trend < 0 ? '▼ Giảm' : trend > 0 ? '▲ Tăng' : '→ Ổn định';
+        document.getElementById('pressTrend').textContent = trendText;
+
+        document.getElementById('lastUpdate').textContent =
+            'Cập nhật lần cuối: ' + new Date(d.timestamp * 1000).toLocaleTimeString('vi-VN');
+    }
+
+    async function fetchHistory() {
+        const res = await fetch('/api/history?hours=6');
+        const arr = await res.json();
+
+        const t = arr.map(x => x.temp).slice(-12);
+        const h = arr.map(x => x.humidity).slice(-12);
+        const p = arr.map(x => (x.pressure / 10).toFixed(2)).slice(-12);
+
+        lineChart.data.datasets[0].data = t;
+        lineChart.data.datasets[1].data = h;
+        lineChart.data.datasets[2].data = p;
+        lineChart.update();
+    }
+
+    function updateClock() {
+        document.getElementById('hdrTime').textContent =
+            new Date().toLocaleTimeString('vi-VN');
+    }
+
+    setInterval(fetchLatest, 3000);
+    setInterval(fetchHistory, 10000);
+    setInterval(updateClock, 1000);
+
+    fetchLatest();
+    fetchHistory();
+    updateClock();
+
+</script>
