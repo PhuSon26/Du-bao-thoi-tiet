@@ -4,26 +4,30 @@
 
 #define RXD2 16
 #define TXD2 17
-#define LoRa_baudrate 115200
+#define LORA_BAUD 9600
 
-const char *ssid = "TEN_WIFI";
-const char *password = "MAT_KHAU_WIFI";
+// WIFI
+const char *ssid = "Le Phu Son";
+const char *password = "02062006";
 
-// link web/server để nhận dữ liệu
-String server = "http://your-server.com/update.php";
+// SERVER PYTHON
+String server = "http://192.168.1.6:8000/update.php";
 
 void setup()
 {
-    Serial.begin(115200);
+    Serial.begin(9600);
 
-    // Serial2 dùng để nhận dữ liệu từ module LoRa
-    Serial2.begin(LoRa_baudrate, SERIAL_8N1, RXD2, TXD2);
+    // UART LoRa
+    Serial2.begin(LORA_BAUD, SERIAL_8N1, RXD2, TXD2);
 
-    Serial.println("Gateway start");
+    Serial.println();
+    Serial.println("===== GATEWAY START =====");
 
-    // kết nối wifi
+    // WIFI
     WiFi.begin(ssid, password);
-    Serial.print("Connecting wifi");
+
+    Serial.print("Dang ket noi WiFi");
+
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(500);
@@ -31,48 +35,71 @@ void setup()
     }
 
     Serial.println();
-    Serial.println("Wifi connected");
+    Serial.println("WiFi connected");
+
+    Serial.print("IP Gateway: ");
     Serial.println(WiFi.localIP());
+
+    Serial.println("Dang cho du lieu...");
 }
 
 void loop()
 {
-    // nếu LoRa gửi dữ liệu sang thì gateway đọc
+    // có dữ liệu LoRa gửi tới
     if (Serial2.available())
     {
         String s = Serial2.readStringUntil('\n');
+
         s.trim();
 
+        // bỏ qua chuỗi rỗng
+        if (s.length() == 0)
+        {
+            return;
+        }
+
+        Serial.println();
+        Serial.println("===== DATA =====");
         Serial.println(s);
 
-        // dữ liệu nhận dạng: temp,pressure,hum,lux,rain
+        // format:
+        // temp,pressure,humidity,lux,rain
+
         int p1 = s.indexOf(',');
         int p2 = s.indexOf(',', p1 + 1);
         int p3 = s.indexOf(',', p2 + 1);
         int p4 = s.indexOf(',', p3 + 1);
 
-        // nếu thiếu dấu phẩy thì dữ liệu bị lỗi
+        // lỗi format
         if (p1 < 0 || p2 < 0 || p3 < 0 || p4 < 0)
         {
-            Serial.println("loi du lieu");
+            Serial.println("LOI DU LIEU");
             return;
         }
 
-        // tách từng giá trị cảm biến từ chuỗi nhận được
+        // tách dữ liệu
         float temp = s.substring(0, p1).toFloat();
-        float pressure = s.substring(p1 + 1, p2).toFloat();
-        float hum = s.substring(p2 + 1, p3).toFloat();
-        int lux = s.substring(p3 + 1, p4).toInt();
-        int rain = s.substring(p4 + 1).toInt();
 
-        String mua = "";
+        float pressure =
+            s.substring(p1 + 1, p2).toFloat();
 
-        // phân loại mưa theo giá trị analog
-        if (rain >= 0 && rain < 400)
+        float hum =
+            s.substring(p2 + 1, p3).toFloat();
+
+        int lux =
+            s.substring(p3 + 1, p4).toInt();
+
+        int rain =
+            s.substring(p4 + 1).toInt();
+
+        // xác định trạng thái mưa
+        String mua;
+
+        if (rain < 400)
         {
             mua = "mua_to";
         }
-        else if (rain >= 400 && rain < 800)
+        else if (rain < 1500)
         {
             mua = "mua_nhe";
         }
@@ -81,39 +108,73 @@ void loop()
             mua = "khong_mua";
         }
 
-        Serial.print("nhiet do: ");
+        // in ra serial monitor
+        Serial.println("------ SENSOR ------");
+
+        Serial.print("Nhiet do: ");
         Serial.println(temp);
-        Serial.print("ap suat: ");
+
+        Serial.print("Ap suat: ");
         Serial.println(pressure);
-        Serial.print("do am: ");
+
+        Serial.print("Do am: ");
         Serial.println(hum);
-        Serial.print("anh sang: ");
+
+        Serial.print("Anh sang: ");
         Serial.println(lux);
-        Serial.print("mua: ");
+
+        Serial.print("Mua: ");
         Serial.print(rain);
-        Serial.print(" - ");
+        Serial.print(" -> ");
         Serial.println(mua);
 
-        // nếu còn wifi thì gửi dữ liệu lên web
+        // gửi web
         if (WiFi.status() == WL_CONNECTED)
         {
             HTTPClient http;
 
-            // ghép dữ liệu vào link dạng GET
-            String link = server + "?temp=" + String(temp);
-            link += "&pressure=" + String(pressure);
-            link += "&hum=" + String(hum);
-            link += "&lux=" + String(lux);
-            link += "&rain=" + String(rain);
-            link += "&status=" + mua;
+            String url = server;
 
-            http.begin(link);
-            int code = http.GET();
+            url += "?temp=" + String(temp, 1);
+            url += "&pressure=" + String(pressure, 1);
+            url += "&hum=" + String(hum, 1);
+            url += "&lux=" + String(lux);
+            url += "&rain=" + String(rain);
+            url += "&status=" + mua;
 
-            Serial.print("http: ");
-            Serial.println(code);
+            Serial.println();
+            Serial.println("GUI SERVER:");
+            Serial.println(url);
+
+            http.begin(url);
+
+            int httpCode = http.GET();
+
+            Serial.print("HTTP CODE: ");
+            Serial.println(httpCode);
+
+            if (httpCode > 0)
+            {
+                String response = http.getString();
+
+                Serial.println("SERVER RESP:");
+                Serial.println(response);
+            }
+            else
+            {
+                Serial.println("GUI THAT BAI");
+            }
 
             http.end();
         }
+        else
+        {
+            Serial.println("MAT KET NOI WIFI");
+        }
+    }
+    else
+    {
+        Serial.println("KHONG CO DU LIEU");
+        delay(1000);
     }
 }
