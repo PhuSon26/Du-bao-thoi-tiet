@@ -114,7 +114,7 @@ def forecast_weather(temp, humidity, pressure, trend, rain_status, lux):
     if lux < 500 and humidity > 60:
         return {"condition": "Có mây", "icon": "⛅",
                 "confidence": 62,
-                "description": "Ánh sáng yếu, độ ẩm trung bình."}
+                "description": "Ánh sáng vừa, độ ẩm trung bình."}
     return {"condition": "Quang mây", "icon": "🌤",
             "confidence": 68,
             "description": "Thời tiết ổn định."}

@@ -112,20 +112,20 @@
   <div class="top-row">
     <div class="metric-card temp">
       <div class="mc-label">Nhiệt độ</div>
-      <div><span class="mc-value temp" id="valTemp">28.4</span><span class="mc-unit">°C</span></div>
-      <div class="mc-delta" id="deltaTemp"><span class="delta-up">▲ 0.3°C</span> so với 10 phút trước</div>
+      <div><span class="mc-value temp" id="valTemp">--</span><span class="mc-unit">°C</span></div>
+      <div class="mc-delta" id="deltaTemp"><span style="color:var(--muted)">—</span> so với 10 phút trước</div>
       <div class="mc-icon">🌡</div>
     </div>
     <div class="metric-card humi">
       <div class="mc-label">Độ ẩm</div>
-      <div><span class="mc-value humi" id="valHumi">72</span><span class="mc-unit">%</span></div>
-      <div class="mc-delta" id="deltaHumi"><span class="delta-up">▲ 4%</span> so với 10 phút trước</div>
+      <div><span class="mc-value humi" id="valHumi">--</span><span class="mc-unit">%</span></div>
+      <div class="mc-delta" id="deltaHumi"><span style="color:var(--muted)">—</span> so với 10 phút trước</div>
       <div class="mc-icon">💧</div>
     </div>
     <div class="metric-card pres">
       <div class="mc-label">Áp suất</div>
-      <div><span class="mc-value pres" id="valPres">1008</span><span class="mc-unit">hPa</span></div>
-      <div class="mc-delta" id="deltaPres"><span class="delta-down">▼ 3 hPa</span> so với 10 phút trước</div>
+      <div><span class="mc-value pres" id="valPres">--</span><span class="mc-unit">hPa</span></div>
+      <div class="mc-delta" id="deltaPres"><span style="color:var(--muted)">—</span> so với 10 phút trước</div>
       <div class="mc-icon">🔵</div>
     </div>
   </div>
@@ -146,23 +146,18 @@
     <div class="forecast-card">
       <div class="card-title"><span class="card-title-dot" style="background:#FFD60A"></span>Dự báo thời tiết</div>
       <div class="forecast-main">
-        <span class="weather-icon" id="fcastIcon">⛅</span>
-        <div class="weather-label" id="fcastLabel">Nhiều mây</div>
-        <div class="weather-sub" id="fcastSub">Khả năng có mưa nhỏ</div>
+        <span class="weather-icon" id="fcastIcon">--</span>
+        <div class="weather-label" id="fcastLabel">Đang tải...</div>
+        <div class="weather-sub" id="fcastSub"></div>
       </div>
       <div style="font-size:11px;color:var(--muted);margin-bottom:4px;display:flex;justify-content:space-between">
         <span>Độ tin cậy</span>
-        <span class="conf-label" id="confText">74%</span>
+        <span class="conf-label" id="confText">--%</span>
       </div>
-      <div class="conf-bar"><div class="conf-fill" id="confFill" style="width:74%;background:var(--green)"></div></div>
+      <div class="conf-bar"><div class="conf-fill" id="confFill" style="width:0%;background:var(--green)"></div></div>
       <div style="margin-top:12px;font-size:11px;color:var(--muted)">Xu hướng áp suất</div>
-      <div id="pressTrend" style="font-size:12px;color:#F85149;margin-top:2px">▼ Giảm — dấu hiệu thời tiết xấu</div>
-      <div class="forecast-hours" id="hourForecast">
-        <div class="fh"><div class="fh-time">+2h</div><div class="fh-icon">🌧</div><div class="fh-temp">27°C</div></div>
-        <div class="fh"><div class="fh-time">+4h</div><div class="fh-icon">🌦</div><div class="fh-temp">26°C</div></div>
-        <div class="fh"><div class="fh-time">+6h</div><div class="fh-icon">⛅</div><div class="fh-temp">27°C</div></div>
-        <div class="fh"><div class="fh-time">+8h</div><div class="fh-icon">🌤</div><div class="fh-temp">28°C</div></div>
-      </div>
+      <div id="pressTrend" style="font-size:12px;color:var(--muted);margin-top:2px">--</div>
+
     </div>
   </div>
 
@@ -177,26 +172,13 @@
     <div class="chart-card">
       <div class="card-title"><span class="card-title-dot" style="background:#3FB950"></span>Thông tin thiết bị LoRa</div>
       <table class="device-table">
-        <tr><td>Node ID</td><td>ESP32-NODE-01</td></tr>
+        <tr><td>Node ID</td><td id="nodeId">--</td></tr>
         <tr><td>Tần số</td><td>915 MHz</td></tr>
-        <tr><td>RSSI</td><td id="rssiVal">-68 dBm</td></tr>
-        <tr><td>SNR</td><td id="snrVal">8.5 dB</td></tr>
-        <tr><td>Gói tin / phút</td><td>6</td></tr>
-        <tr><td>Cường độ tín hiệu</td><td>
-          <div class="signal-bar">
-            <div class="sb active" style="height:6px"></div>
-            <div class="sb active" style="height:9px"></div>
-            <div class="sb active" style="height:12px"></div>
-            <div class="sb active" style="height:15px"></div>
-            <div class="sb" style="height:18px"></div>
-          </div>
-        </td></tr>
+        <tr><td>RSSI</td><td id="rssiVal">--</td></tr>
+        <tr><td>SNR</td><td id="snrVal">--</td></tr>
+        <tr><td>Gói tin / phút</td><td id="pktPerMin">--</td></tr>
       </table>
-      <div class="node-status" style="margin-top:12px">
-        <div class="node-pill"><div class="np-dot" style="background:var(--green)"></div>Node-01 Online</div>
-        <div class="node-pill"><div class="np-dot" style="background:var(--green)"></div>Node-02 Online</div>
-        <div class="node-pill"><div class="np-dot" style="background:var(--amber)"></div>Node-03 Yếu</div>
-      </div>
+      <div class="node-status" id="nodeStatus" style="margin-top:12px"></div>
     </div>
   </div>
 
@@ -205,13 +187,13 @@
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
       <div>
         <div style="font-size:11px;color:var(--muted);margin-bottom:6px">Heat Index (Cảm nhận)</div>
-        <div style="font-family:'Space Mono',monospace;font-size:28px;color:#FF8C69" id="heatIdx">31.2°C</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:4px" id="heatLevel">Cảm giác: <span style="color:#FFD60A">Ấm, cẩn thận</span></div>
+        <div style="font-family:'Space Mono',monospace;font-size:28px;color:#FF8C69" id="heatIdx">--°C</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px" id="heatLevel">Cảm giác: <span style="color:var(--muted)">--</span></div>
       </div>
       <div>
         <div style="font-size:11px;color:var(--muted);margin-bottom:6px">Điểm sương</div>
-        <div style="font-family:'Space Mono',monospace;font-size:28px;color:#4ECDC4" id="dewPoint">22.8°C</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:4px">Độ ẩm tuyệt đối: <span style="color:#4ECDC4" id="absHumi">19.2 g/m³</span></div>
+        <div style="font-family:'Space Mono',monospace;font-size:28px;color:#4ECDC4" id="dewPoint">--°C</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">Độ ẩm tuyệt đối: <span style="color:#4ECDC4" id="absHumi">-- g/m³</span></div>
       </div>
     </div>
   </div>
@@ -219,10 +201,10 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-const labels6h = ['06:00','06:30','07:00','07:30','08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30'];
-let tempData = [27.1,27.4,27.8,28.0,28.2,28.4,28.5,28.3,28.6,28.8,28.4,28.4];
-let humiData = [68,69,70,71,72,72,73,73,72,71,72,72];
-let presData = [101.4,101.3,101.2,101.1,101.0,100.9,100.8,100.8,100.7,100.6,100.8,100.8];
+const labels6h = [];
+let tempData = [];
+let humiData = [];
+let presData = [];
 
 const lineChart = new Chart(document.getElementById('lineChart'),{
   type:'line',
@@ -245,8 +227,8 @@ const lineChart = new Chart(document.getElementById('lineChart'),{
   }
 });
 
-const presHours = ['00h','03h','06h','09h','12h','15h','18h','21h'];
-const presVals = [1012,1011,1010,1009,1008,1007,1006,1008];
+const presHours = [];
+const presVals = [];
 const barChart = new Chart(document.getElementById('barChart'),{
   type:'bar',
   data:{
@@ -262,30 +244,86 @@ const barChart = new Chart(document.getElementById('barChart'),{
     }
   }
 });
+    // Lưu giá trị cách ~10 phút để tính delta
+    const prevVals = { temp: null, humidity: null, pressure: null, ts: null };
+
+    function calcAbsHumidity(tempC, dewPointC) {
+        // g/m³ theo công thức Magnus
+        const Mw = 18.01528, R = 8314.46;
+        const e = 6.1078 * Math.pow(10, (7.5 * dewPointC) / (237.3 + dewPointC));
+        return ((e * 100 * Mw) / (R * (tempC + 273.15))).toFixed(1);
+    }
+
+    function heatLevel(hi) {
+        if (hi < 27) return ['Dễ chịu', '#3FB950'];
+        if (hi < 32) return ['Ấm, cẩn thận', '#FFD60A'];
+        if (hi < 41) return ['Nóng, thận trọng', '#D29922'];
+        if (hi < 54) return ['Rất nóng, nguy hiểm', '#F85149'];
+        return ['Cực kỳ nguy hiểm', '#BC8CFF'];
+    }
+
+    function renderDelta(elId, current, prev, unit, decimals = 1) {
+        const el = document.getElementById(elId);
+        if (prev === null) { el.innerHTML = `<span style="color:var(--muted)">—</span> so với 10 phút trước`; return; }
+        const diff = +(current - prev).toFixed(decimals);
+        if (Math.abs(diff) < 0.05) {
+            el.innerHTML = `<span style="color:var(--muted)">→ không đổi</span> so với 10 phút trước`;
+        } else if (diff > 0) {
+            el.innerHTML = `<span class="delta-up">▲ ${diff}${unit}</span> so với 10 phút trước`;
+        } else {
+            el.innerHTML = `<span class="delta-down">▼ ${Math.abs(diff)}${unit}</span> so với 10 phút trước`;
+        }
+    }
+
     async function fetchLatest() {
         const res = await fetch('/api/latest');
         const d = await res.json();
 
-        // cards
+        // --- Cards ---
         document.getElementById('valTemp').textContent = d.temp.toFixed(1);
         document.getElementById('valHumi').textContent = Math.round(d.humidity);
         document.getElementById('valPres').textContent = Math.round(d.pressure);
 
-        // heat index & dew point từ server
+        // --- Delta so với ~10 phút trước ---
+        const nowTs = d.timestamp;
+        if (prevVals.ts !== null && (nowTs - prevVals.ts) >= 540) {
+            renderDelta('deltaTemp', d.temp, prevVals.temp, '°C', 1);
+            renderDelta('deltaHumi', d.humidity, prevVals.humidity, '%', 0);
+            renderDelta('deltaPres', d.pressure, prevVals.pressure, ' hPa', 1);
+            prevVals.temp = d.temp; prevVals.humidity = d.humidity;
+            prevVals.pressure = d.pressure; prevVals.ts = nowTs;
+        } else if (prevVals.ts === null) {
+            prevVals.temp = d.temp; prevVals.humidity = d.humidity;
+            prevVals.pressure = d.pressure; prevVals.ts = nowTs;
+        }
+
+        // --- Heat index & dew point ---
         document.getElementById('heatIdx').textContent = d.heat_index + '°C';
         document.getElementById('dewPoint').textContent = d.dew_point + '°C';
+        const [lvlText, lvlColor] = heatLevel(d.heat_index);
+        document.getElementById('heatLevel').innerHTML =
+            `Cảm giác: <span style="color:${lvlColor}">${lvlText}</span>`;
+        document.getElementById('absHumi').textContent =
+            calcAbsHumidity(d.temp, d.dew_point) + ' g/m³';
 
-        // forecast từ server
+        // --- Forecast ---
         document.getElementById('fcastIcon').textContent = d.forecast.icon;
         document.getElementById('fcastLabel').textContent = d.forecast.condition;
         document.getElementById('fcastSub').textContent = d.forecast.description;
         document.getElementById('confText').textContent = d.forecast.confidence + '%';
         document.getElementById('confFill').style.width = d.forecast.confidence + '%';
 
-        // áp suất trend
+        // --- Pressure trend ---
         const trend = d.press_trend;
-        const trendText = trend < 0 ? '▼ Giảm' : trend > 0 ? '▲ Tăng' : '→ Ổn định';
-        document.getElementById('pressTrend').textContent = trendText;
+        const trendEl = document.getElementById('pressTrend');
+        if (trend < -1.5) { trendEl.textContent = '▼ Giảm — dấu hiệu thời tiết xấu'; trendEl.style.color = '#F85149'; }
+        else if (trend < 0) { trendEl.textContent = '▼ Giảm nhẹ'; trendEl.style.color = '#D29922'; }
+        else if (trend > 1.5) { trendEl.textContent = '▲ Tăng — thời tiết đang ổn định'; trendEl.style.color = '#3FB950'; }
+        else if (trend > 0) { trendEl.textContent = '▲ Tăng nhẹ'; trendEl.style.color = '#58A6FF'; }
+        else { trendEl.textContent = '→ Ổn định'; trendEl.style.color = '#7D8590'; }
+
+        // --- Node info ---
+        document.getElementById('nodeId').textContent = d.node_id || '--';
 
         document.getElementById('lastUpdate').textContent =
             'Cập nhật lần cuối: ' + new Date(d.timestamp * 1000).toLocaleTimeString('vi-VN');
@@ -294,15 +332,58 @@ const barChart = new Chart(document.getElementById('barChart'),{
     async function fetchHistory() {
         const res = await fetch('/api/history?hours=6');
         const arr = await res.json();
+        const slice = arr.slice(-12);
 
-        const t = arr.map(x => x.temp).slice(-12);
-        const h = arr.map(x => x.humidity).slice(-12);
-        const p = arr.map(x => (x.pressure / 10).toFixed(2)).slice(-12);
-
-        lineChart.data.datasets[0].data = t;
-        lineChart.data.datasets[1].data = h;
-        lineChart.data.datasets[2].data = p;
+        lineChart.data.labels = slice.map(x =>
+            new Date(x.timestamp * 1000).toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit'})
+        );
+        lineChart.data.datasets[0].data = slice.map(x => x.temp);
+        lineChart.data.datasets[1].data = slice.map(x => x.humidity);
+        lineChart.data.datasets[2].data = slice.map(x => (x.pressure / 10).toFixed(2));
         lineChart.update();
+    }
+
+    async function fetchHistory24() {
+        const res = await fetch('/api/history?hours=24');
+        const arr = await res.json();
+        // Chia thành ~8 bucket 3h
+        const buckets = [];
+        const bucketSize = Math.ceil(arr.length / 8);
+        for (let i = 0; i < 8; i++) {
+            const chunk = arr.slice(i * bucketSize, (i + 1) * bucketSize);
+            if (!chunk.length) continue;
+            const avg = chunk.reduce((s, x) => s + x.pressure, 0) / chunk.length;
+            const label = new Date(chunk[0].timestamp * 1000)
+                .toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit'});
+            buckets.push({ label, avg: +avg.toFixed(1) });
+        }
+        barChart.data.labels = buckets.map(b => b.label);
+        const vals = buckets.map(b => b.avg);
+        const minVal = Math.min(...vals);
+        barChart.data.datasets[0].data = vals;
+        barChart.data.datasets[0].backgroundColor = vals.map(v => v < minVal + 2 ? 'rgba(248,81,73,.6)' : 'rgba(88,166,255,.5)');
+        barChart.data.datasets[0].borderColor = vals.map(v => v < minVal + 2 ? '#F85149' : '#58A6FF');
+        barChart.options.scales.y.min = Math.floor(Math.min(...vals)) - 1;
+        barChart.options.scales.y.max = Math.ceil(Math.max(...vals)) + 1;
+        barChart.update();
+    }
+
+    async function fetchNodes() {
+        const res = await fetch('/api/nodes');
+        const arr = await res.json();
+        const container = document.getElementById('nodeStatus');
+        const pktEl = document.getElementById('pktPerMin');
+        container.innerHTML = arr.map(n => {
+            const color = n.status === 'online' ? 'var(--green)' : 'var(--amber)';
+            const label = n.status === 'online' ? 'Online' : 'Offline';
+            return `<div class="node-pill"><div class="np-dot" style="background:${color}"></div>${n.node_id} ${label}</div>`;
+        }).join('');
+        // Ước tính gói tin/phút từ node đầu tiên
+        if (arr.length) {
+            const main = arr.find(n => n.node_id === 'ESP32-NODE-01') || arr[0];
+            // packet_count / uptime_minutes ước lượng từ last_seen vs now
+            pktEl.textContent = main.status === 'online' ? '~' + Math.round(main.packet_count / Math.max(1, (Date.now()/1000 - main.last_seen + 60) / 60)) : '--';
+        }
     }
 
     function updateClock() {
@@ -312,10 +393,14 @@ const barChart = new Chart(document.getElementById('barChart'),{
 
     setInterval(fetchLatest, 3000);
     setInterval(fetchHistory, 10000);
+    setInterval(fetchHistory24, 60000);
+    setInterval(fetchNodes, 15000);
     setInterval(updateClock, 1000);
 
     fetchLatest();
     fetchHistory();
+    fetchHistory24();
+    fetchNodes();
     updateClock();
 
 </script>
